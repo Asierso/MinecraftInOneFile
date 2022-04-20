@@ -38,7 +38,7 @@ char KEY;
 int CUBE_DIM[2] = {9,4};
 
 //UI load memory cells
-int UI_MEMORY[4] = {0,0,0,0};
+int UI_MEMORY[6] = {0,0,0,0,0,0};
 //Getch enabled var
 bool ENABLE_GETCH = false;
 int KEY_MODE = 0;
@@ -47,6 +47,10 @@ int KEY_MODE = 0;
 char KEY_ARRAY[20];
 int KEY_ARRAY_ITERATOR = 0;
 
+//Temporal custom block
+int CB_C[9][4];
+int CB_X = 0;
+int CB_Y = 0;
 //Color map
 enum Colors { 
  BLACK = 0,
@@ -249,84 +253,92 @@ void *update()
 		case 'l': //Load world
 			drawMenu(3);
 			break;
+		case 'F':
+		case 'f': //Custom blocks menu
+			drawMenu(5);
+			break;
 		case 'R':
 		case 'r': //Reset screen
 			drawMatrix(0,0,WINDOW_BUFFER_W,WINDOW_BUFFER_H,NULL,BLACK,BLACK,0,false);
 			break;
+		case 'O':
+		case 'o': //Reset screen
+			if(UI_MEMORY[0]+UI_MEMORY[1]+UI_MEMORY[2]+UI_MEMORY[3]+UI_MEMORY[4] == 0) drawBlock(CURSOR[0],CURSOR[1],100,false);
+			break;
 		//Block placement
 		case '0': //Air
-			if(UI_MEMORY[0] == 0) drawBlock(CURSOR[0],CURSOR[1],0,false);
+			if(UI_MEMORY[0]+UI_MEMORY[1]+UI_MEMORY[2]+UI_MEMORY[3]+UI_MEMORY[4] == 0) drawBlock(CURSOR[0],CURSOR[1],0,false);
 			break;
 		case '1': //Grass
-			if(UI_MEMORY[0] == 0) drawBlock(CURSOR[0],CURSOR[1],1,false);
+			if(UI_MEMORY[0]+UI_MEMORY[1]+UI_MEMORY[2]+UI_MEMORY[3]+UI_MEMORY[4] == 0) drawBlock(CURSOR[0],CURSOR[1],1,false);
 			break;
 		case '2': //Dirt
-			if(UI_MEMORY[0] == 0) drawBlock(CURSOR[0],CURSOR[1],2,false);
+			if(UI_MEMORY[0]+UI_MEMORY[1]+UI_MEMORY[2]+UI_MEMORY[3]+UI_MEMORY[4] == 0) drawBlock(CURSOR[0],CURSOR[1],2,false);
 			break;
 		case '3': //Bricks
-			if(UI_MEMORY[0] == 0) drawBlock(CURSOR[0],CURSOR[1],3,false);
+			if(UI_MEMORY[0]+UI_MEMORY[1]+UI_MEMORY[2]+UI_MEMORY[3]+UI_MEMORY[4] == 0) drawBlock(CURSOR[0],CURSOR[1],3,false);
 			break;
 		case '4': //Water
-			if(UI_MEMORY[0] == 0) drawBlock(CURSOR[0],CURSOR[1],4,false);
+			if(UI_MEMORY[0]+UI_MEMORY[1]+UI_MEMORY[2]+UI_MEMORY[3]+UI_MEMORY[4] == 0) drawBlock(CURSOR[0],CURSOR[1],4,false);
 			break;
 		case '5': //Planks
-			if(UI_MEMORY[0] == 0) drawBlock(CURSOR[0],CURSOR[1],5,false);
+			if(UI_MEMORY[0]+UI_MEMORY[1]+UI_MEMORY[2]+UI_MEMORY[3]+UI_MEMORY[4] == 0) drawBlock(CURSOR[0],CURSOR[1],5,false);
 			break;
 		case '6': //Leaves
-			if(UI_MEMORY[0] == 0) drawBlock(CURSOR[0],CURSOR[1],6,false);
+			if(UI_MEMORY[0]+UI_MEMORY[1]+UI_MEMORY[2]+UI_MEMORY[3]+UI_MEMORY[4] == 0) drawBlock(CURSOR[0],CURSOR[1],6,false);
 			break;
 		case '7': //Wood
-			if(UI_MEMORY[0] == 0) drawBlock(CURSOR[0],CURSOR[1],7,false);
+			if(UI_MEMORY[0]+UI_MEMORY[1]+UI_MEMORY[2]+UI_MEMORY[3]+UI_MEMORY[4] == 0) drawBlock(CURSOR[0],CURSOR[1],7,false);
 			break;
 		case '8': //Cobblestone
-			if(UI_MEMORY[0] == 0) drawBlock(CURSOR[0],CURSOR[1],8,false);
+			if(UI_MEMORY[0]+UI_MEMORY[1]+UI_MEMORY[2]+UI_MEMORY[3]+UI_MEMORY[4] == 0) drawBlock(CURSOR[0],CURSOR[1],8,false);
 			break;
 		case '9': //Mossy Cobblestone
-			if(UI_MEMORY[0] == 0) drawBlock(CURSOR[0],CURSOR[1],9,false);
+			if(UI_MEMORY[0]+UI_MEMORY[1]+UI_MEMORY[2]+UI_MEMORY[3]+UI_MEMORY[4] == 0) drawBlock(CURSOR[0],CURSOR[1],9,false);
 			break;
 		case 'b':
 		case 'B': //Lava
-			if(UI_MEMORY[0] == 0) drawBlock(CURSOR[0],CURSOR[1],10,false);
+			if(UI_MEMORY[0]+UI_MEMORY[1]+UI_MEMORY[2]+UI_MEMORY[3]+UI_MEMORY[4] == 0) drawBlock(CURSOR[0],CURSOR[1],10,false);
 			break;
 		case 'c':
 		case 'C': //Sand
-			if(UI_MEMORY[0] == 0) drawBlock(CURSOR[0],CURSOR[1],11,false);
+			if(UI_MEMORY[0]+UI_MEMORY[1]+UI_MEMORY[2]+UI_MEMORY[3]+UI_MEMORY[4] == 0) drawBlock(CURSOR[0],CURSOR[1],11,false);
 			break;
 		case 'z':
 		case 'Z': //Red wool
-			if(UI_MEMORY[0] == 0) drawBlock(CURSOR[0],CURSOR[1],12,false);
+			if(UI_MEMORY[0]+UI_MEMORY[1]+UI_MEMORY[2]+UI_MEMORY[3]+UI_MEMORY[4] == 0) drawBlock(CURSOR[0],CURSOR[1],12,false);
 			break;
 		case 'x':
 		case 'X': //Green wool
-			if(UI_MEMORY[0] == 0) drawBlock(CURSOR[0],CURSOR[1],13,false);
+			if(UI_MEMORY[0]+UI_MEMORY[1]+UI_MEMORY[2]+UI_MEMORY[3]+UI_MEMORY[4] == 0) drawBlock(CURSOR[0],CURSOR[1],13,false);
 			break;
 		case 'v':
 		case 'V': //Blue wool
-			if(UI_MEMORY[0] == 0) drawBlock(CURSOR[0],CURSOR[1],14,false);
+			if(UI_MEMORY[0]+UI_MEMORY[1]+UI_MEMORY[2]+UI_MEMORY[3]+UI_MEMORY[4] == 0) drawBlock(CURSOR[0],CURSOR[1],14,false);
 			break;
 		case 'n':
 		case 'N': //White wool
-			if(UI_MEMORY[0] == 0) drawBlock(CURSOR[0],CURSOR[1],15,false);
+			if(UI_MEMORY[0]+UI_MEMORY[1]+UI_MEMORY[2]+UI_MEMORY[3]+UI_MEMORY[4] == 0) drawBlock(CURSOR[0],CURSOR[1],15,false);
 			break;
 		case 'm':
 		case 'M': //Snowy grass
-			if(UI_MEMORY[0] == 0) drawBlock(CURSOR[0],CURSOR[1],16,false);
+			if(UI_MEMORY[0]+UI_MEMORY[1]+UI_MEMORY[2]+UI_MEMORY[3]+UI_MEMORY[4] == 0) drawBlock(CURSOR[0],CURSOR[1],16,false);
 			break;
 		case 'h':
 		case 'H': //Diamond
-			if(UI_MEMORY[0] == 0) drawBlock(CURSOR[0],CURSOR[1],17,false);
+			if(UI_MEMORY[0]+UI_MEMORY[1]+UI_MEMORY[2]+UI_MEMORY[3]+UI_MEMORY[4] == 0) drawBlock(CURSOR[0],CURSOR[1],17,false);
 			break;
 		case 'j':
 		case 'J': //Redstone
-			if(UI_MEMORY[0] == 0) drawBlock(CURSOR[0],CURSOR[1],18,false);
+			if(UI_MEMORY[0]+UI_MEMORY[1]+UI_MEMORY[2]+UI_MEMORY[3]+UI_MEMORY[4] == 0) drawBlock(CURSOR[0],CURSOR[1],18,false);
 			break;
 		case 'k':
 		case 'K': //Gold
-			if(UI_MEMORY[0] == 0) drawBlock(CURSOR[0],CURSOR[1],19,false);
+			if(UI_MEMORY[0]+UI_MEMORY[1]+UI_MEMORY[2]+UI_MEMORY[3]+UI_MEMORY[4] == 0) drawBlock(CURSOR[0],CURSOR[1],19,false);
 			break;
 		case 'p':
 		case 'P': //Flower leaves
-			if(UI_MEMORY[0] == 0) drawBlock(CURSOR[0],CURSOR[1],20,false);
+			if(UI_MEMORY[0]+UI_MEMORY[1]+UI_MEMORY[2]+UI_MEMORY[3]+UI_MEMORY[4] == 0) drawBlock(CURSOR[0],CURSOR[1],20,false);
 			break;
 	}
 	
@@ -335,12 +347,13 @@ void *update()
 		if(KEY == '.')
 		{
 			KEY_ARRAY_ITERATOR = 0;
-			for(i = 0;i<4;i++)
+			for(i = 0;i<5;i++)
 			{
 				if(UI_MEMORY[i] == 1)
 					drawMenu(i);
 			}
 			KEY_MODE = 0;
+			drawMenu(6);
 			for(i = 0;i<20;i++)
 				KEY_ARRAY[i] = NULL;
 		}
@@ -481,7 +494,7 @@ void drawCursor()
 			}
 		}
 	}
-	if(UI_MEMORY[0] == 0 && UI_MEMORY[1] == 0 && UI_MEMORY[2] == 0 && UI_MEMORY[3] == 0)
+	if(UI_MEMORY[0] == 0 && UI_MEMORY[1] == 0 && UI_MEMORY[2] == 0 && UI_MEMORY[3] == 0 && UI_MEMORY[4] == 0)
 	{
 		drawMatrix(CURSOR[0],CURSOR[1],CUBE_DIM[0],CUBE_DIM[1],' ',GREEN,GREEN,-1,true);
 	}
@@ -557,7 +570,7 @@ void drawMenu(int menuId)
 			w = 54;
 			h = 35;
 			j=1;
-			if(UI_MEMORY[0]==0 && UI_MEMORY[1]==0 && UI_MEMORY[2]==0 && UI_MEMORY[3]==0)
+			if(UI_MEMORY[0]==0 && UI_MEMORY[1]==0 && UI_MEMORY[2]==0 && UI_MEMORY[3]==0 && UI_MEMORY[4]==0)
 			{
 				drawMatrix(dx,dy,w,1,205,BLACK,WHITE,0,true);
 				drawMatrix(dx,dy+h-1,w,1,205,BLACK,WHITE,0,true);
@@ -582,7 +595,7 @@ void drawMenu(int menuId)
 					}
 				}
 			}	
-			else if(UI_MEMORY[1]==0 && UI_MEMORY[2]==0 && UI_MEMORY[3]==0)
+			else if(UI_MEMORY[1]==0 && UI_MEMORY[2]==0 && UI_MEMORY[3]==0 && UI_MEMORY[4]==0)
 			{
 				drawMatrix(dx,dy,w,h,NULL,NULL,NULL,-1,true);
 				UI_MEMORY[0] = 0;
@@ -594,7 +607,7 @@ void drawMenu(int menuId)
 			w = 60;
 			h = 20;
 			j=1;
-			if(UI_MEMORY[1]==0 && UI_MEMORY[0]==0 && UI_MEMORY[2]==0 && UI_MEMORY[3]==0)
+			if(UI_MEMORY[1]==0 && UI_MEMORY[0]==0 && UI_MEMORY[2]==0 && UI_MEMORY[3]==0 && UI_MEMORY[4]==0)
 			{
 				drawMatrix(dx,dy,w,1,205,BLACK,WHITE,0,true);
 				drawMatrix(dx,dy+h-1,w,1,205,BLACK,WHITE,0,true);
@@ -610,17 +623,19 @@ void drawMenu(int menuId)
 				drawText(dx+3,dy+4,"-Establezca la resolucion de la terminal a 126x51",BLACK,WHITE,HORIZONTAL,1,true);
 				drawText(dx+3,dy+5," y la fuente a 10pt para evitar bugs visuales",BLACK,WHITE,HORIZONTAL,1,true);
 				drawText(dx+2,dy+7,"Controles del juego",BLACK,WHITE,HORIZONTAL,1,true);
-				drawText(dx+3,dy+9,"Moverse: W,A,S,D",BLACK,YELLOW,HORIZONTAL,1,true);
-				drawText(dx+3,dy+10,"Inventario: E",BLACK,YELLOW,HORIZONTAL,1,true);
-				drawText(dx+3,dy+11,"Creditos: Q",BLACK,YELLOW,HORIZONTAL,1,true);
-				drawText(dx+3,dy+12,"Guardar: G",BLACK,YELLOW,HORIZONTAL,1,true);
-				drawText(dx+3,dy+13,"Cargar: L",BLACK,YELLOW,HORIZONTAL,1,true);
-				drawText(dx+3,dy+14,"Confirmar dialogo: .",BLACK,YELLOW,HORIZONTAL,1,true);
-				drawText(dx+3,dy+15,"Resetear mundo: R",BLACK,YELLOW,HORIZONTAL,1,true);
+				drawText(dx+3,dy+8,"Moverse: W,A,S,D",BLACK,YELLOW,HORIZONTAL,1,true);
+				drawText(dx+3,dy+9,"Inventario: E",BLACK,YELLOW,HORIZONTAL,1,true);
+				drawText(dx+3,dy+10,"Creditos: Q",BLACK,YELLOW,HORIZONTAL,1,true);
+				drawText(dx+3,dy+11,"Guardar: G",BLACK,YELLOW,HORIZONTAL,1,true);
+				drawText(dx+3,dy+12,"Cargar: L",BLACK,YELLOW,HORIZONTAL,1,true);
+				drawText(dx+3,dy+13,"Confirmar dialogo/opcion: .",BLACK,YELLOW,HORIZONTAL,1,true);
+				drawText(dx+3,dy+14,"Resetear mundo: R",BLACK,YELLOW,HORIZONTAL,1,true);
+				drawText(dx+3,dy+15,"Personalizar bloque: F",BLACK,YELLOW,HORIZONTAL,1,true);
+				drawText(dx+3,dy+16,"Usar bloque custom: O",BLACK,YELLOW,HORIZONTAL,1,true);
 				drawText(dx+3,dy+h-2,"Pulsa Q para cerrar esta ventana",BLACK,WHITE,HORIZONTAL,1,true);
 				UI_MEMORY[1] = 1;
 			}
-			else if(UI_MEMORY[0]==0 && UI_MEMORY[2]==0 && UI_MEMORY[3]==0)
+			else if(UI_MEMORY[0]==0 && UI_MEMORY[2]==0 && UI_MEMORY[3]==0 && UI_MEMORY[4]==0)
 			{
 				drawMatrix(dx,dy,w,h,NULL,NULL,NULL,-1,true);
 				UI_MEMORY[1] = 0;
@@ -632,7 +647,7 @@ void drawMenu(int menuId)
 			w = 60;
 			h = 5;
 			j=1;
-			if(UI_MEMORY[2]==0 && UI_MEMORY[1]==0 && UI_MEMORY[0]==0 && UI_MEMORY[3]==0)
+			if(UI_MEMORY[2]==0 && UI_MEMORY[1]==0 && UI_MEMORY[0]==0 && UI_MEMORY[3]==0 && UI_MEMORY[4]==0)
 			{
 				drawMatrix(dx,dy,w,1,205,BLACK,WHITE,0,true);
 				drawMatrix(dx,dy+h-1,w,1,205,BLACK,WHITE,0,true);
@@ -648,7 +663,7 @@ void drawMenu(int menuId)
 				UI_MEMORY[2] = 1;
 				KEY_MODE = 1;
 			}	
-			else if(UI_MEMORY[1]==0 && UI_MEMORY[0]==0 && UI_MEMORY[3]==0)
+			else if(UI_MEMORY[1]==0 && UI_MEMORY[0]==0 && UI_MEMORY[3]==0 && UI_MEMORY[4]==0)
 			{
 				drawMatrix(dx,dy,w,h,NULL,NULL,NULL,-1,true);
 				save(KEY_ARRAY);
@@ -662,7 +677,7 @@ void drawMenu(int menuId)
 			w = 60;
 			h = 5;
 			j=1;
-			if(UI_MEMORY[3]==0 && UI_MEMORY[1]==0 && UI_MEMORY[0]==0 && UI_MEMORY[2]==0)
+			if(UI_MEMORY[3]==0 && UI_MEMORY[1]==0 && UI_MEMORY[0]==0 && UI_MEMORY[2]==0 && UI_MEMORY[4]==0)
 			{
 				drawMatrix(dx,dy,w,1,205,BLACK,WHITE,0,true);
 				drawMatrix(dx,dy+h-1,w,1,205,BLACK,WHITE,0,true);
@@ -678,7 +693,7 @@ void drawMenu(int menuId)
 				UI_MEMORY[3] = 1;
 				KEY_MODE = 1;
 			}	
-			else if(UI_MEMORY[1]==0 && UI_MEMORY[0]==0 && UI_MEMORY[2]==0 && UI_MEMORY[3]==1)
+			else if(UI_MEMORY[1]==0 && UI_MEMORY[0]==0 && UI_MEMORY[2]==0 && UI_MEMORY[3]==1 && UI_MEMORY[4]==0)
 			{
 				drawMatrix(dx,dy,w,h,NULL,NULL,NULL,-1,true);
 				load(KEY_ARRAY);
@@ -694,6 +709,110 @@ void drawMenu(int menuId)
 			if(UI_MEMORY[2]==1 || UI_MEMORY[3] == 1)
 				drawText(dx+3+strlen("Nombre del mundo:"),dy+3,KEY_ARRAY,BLACK,WHITE,HORIZONTAL,1,true);	
 			break;
+		case 5:
+			dx = WINDOW_BUFFER_W/4+5;
+			dy = WINDOW_BUFFER_H/4-1;
+			w = 50;
+			h = 25;
+			if(UI_MEMORY[2]==0 && UI_MEMORY[1]==0 && UI_MEMORY[0]==0 && UI_MEMORY[3]==0 && UI_MEMORY[4]==0)
+			{
+				drawMatrix(dx,dy,w,1,205,BLACK,WHITE,0,true);
+				drawMatrix(dx,dy+h-1,w,1,205,BLACK,WHITE,0,true);
+				drawMatrix(dx,dy,1,h,186,BLACK,WHITE,0,true);
+				drawMatrix(dx+w-1,dy,1,h,186,BLACK,WHITE,0,true);
+				drawMatrix(dx,dy,1,1,201,BLACK,WHITE,0,true);
+				drawMatrix(dx+w-1,dy,1,1,187,BLACK,WHITE,0,true);
+				drawMatrix(dx+w-1,dy+h-1,1,1,188,BLACK,WHITE,0,true);
+				drawMatrix(dx,dy+h-1,1,1,200,BLACK,WHITE,0,true);
+				drawMatrix(dx+1,dy+1,w-2,h-2,' ',BLACK,BLACK,0,true);
+				drawText(dx+2,dy+1,"Personalizar bloque",BLACK,WHITE,HORIZONTAL,1,true);
+				drawText(dx+w-strlen("Salir: FF.")-2,dy+h-2,"Salir: FF.",BLACK,WHITE,HORIZONTAL,1,true);
+				drawText(dx+w-strlen("Usar: O")-2,dy+h-3,"Usar: O",BLACK,WHITE,HORIZONTAL,1,true);
+				//Brushes
+				for(i=0;i<7;i++)
+				{
+					drawMatrix(dx+3,dy+2*(i+1)+i+1,4,2,' ',i,i,0,true);
+					char numChr[3];
+					sprintf(&numChr,"C%d",i+1);
+					drawText(dx+3,dy+2*(i+1)+i+3,numChr,BLACK,WHITE,HORIZONTAL,1,true);
+				}
+				for(i=7;i<14;i++)
+				{
+					drawMatrix(dx+10,dy+2*(i-6)+(i-7)+1,4,2,' ',i,i,0,true);
+					char numChr[3];
+					sprintf(&numChr,"C%d",i+1);
+					drawText(dx+10,dy+2*(i-6)+(i-7)+3,numChr,BLACK,WHITE,HORIZONTAL,1,true);
+				}
+				//Reset custom block pos_pointer
+				CB_X = 0;
+				CB_Y = 0;
+				UI_MEMORY[4] = 1;
+				KEY_MODE = 1;
+				//Preview box
+				drawMatrix(dx+23,dy+9,CUBE_DIM[0]+4,1,205,BLACK,WHITE,0,true);
+				drawMatrix(dx+23,dy+11+CUBE_DIM[1],CUBE_DIM[0]+4,1,205,BLACK,WHITE,0,true);
+				drawMatrix(dx+23,dy+9,1,CUBE_DIM[1]+3,186,BLACK,WHITE,0,true);
+				drawMatrix(dx+26+CUBE_DIM[0],dy+9,1,CUBE_DIM[1]+3,186,BLACK,WHITE,0,true);
+				drawMatrix(dx+23,dy+9,1,1,201,BLACK,WHITE,0,true);
+				drawMatrix(dx+23+CUBE_DIM[0]+3,dy+9,1,1,187,BLACK,WHITE,0,true);
+				drawMatrix(dx+23+CUBE_DIM[0]+3,dy+9+CUBE_DIM[1]+2,1,1,188,BLACK,WHITE,0,true);
+				drawMatrix(dx+23,dy+9+CUBE_DIM[1]+2,1,1,200,BLACK,WHITE,0,true);
+				drawText(dx+24,dy+10,"Vista prev.",BLACK,WHITE,HORIZONTAL,1,true);
+				//Warning
+				drawText(dx+19,dy+17,"Aviso",BLACK,RED,HORIZONTAL,1,true);
+				drawText(dx+19,dy+18,"Los bloques customs NO",BLACK,RED,HORIZONTAL,1,true);
+				drawText(dx+19,dy+19,"se pueden guardar",BLACK,RED,HORIZONTAL,1,true);
+				//Base block
+				drawMatrix(dx+25,dy+11,CUBE_DIM[0],CUBE_DIM[1],' ',WHITE,WHITE,0,true);
+			}	
+			else if(UI_MEMORY[1]==0 && UI_MEMORY[0]==0 && UI_MEMORY[3]==0 && UI_MEMORY[2]==0 && UI_MEMORY[4] == 1)
+			{
+				drawMatrix(dx,dy,w,h,NULL,NULL,NULL,-1,true);
+				UI_MEMORY[4] = 0;
+				KEY_MODE = 0;
+			}
+			break;
+		case 6: //Update custom block preview
+			dx = WINDOW_BUFFER_W/4+5;
+			dy = WINDOW_BUFFER_H/4-1;
+			w = 50;
+			h = 25;
+			i = 0;
+			j = 0;
+			if(UI_MEMORY[4]==1)
+			{
+				if(KEY_MODE==0)
+				{
+					if(KEY_ARRAY[0] == 'C' || KEY_ARRAY[0] == 'c') //Color parse
+						KEY_ARRAY[0] = '0';
+					if(KEY_ARRAY[0] == 'F' || KEY_ARRAY[0] == 'f') //Close option
+						drawMenu(5);
+					else
+					{
+						//Reset block buffer if is new one
+						if(CB_X == 0 && CB_Y==0)
+							for(i = 0;i<CUBE_DIM[0];i++)
+								for(j = 0;j<CUBE_DIM[1];j++)
+									CB_C[i][j] = 0;	
+						//Draw preview
+						drawMatrix(dx+25+CB_X,dy+11+CB_Y,1,1,' ',atoi(KEY_ARRAY)-1,atoi(KEY_ARRAY)-1,0,true);
+						//Write block buffer
+						CB_C[CB_X][CB_Y] = atoi(KEY_ARRAY)-1;
+						//Update coords
+						CB_X++;
+						if(CB_X==CUBE_DIM[0])
+						{
+							CB_Y++;
+							CB_X=0;
+						}
+						if(CB_Y<CUBE_DIM[1]) //Renable typing
+							KEY_MODE = 1;
+						else //Close
+							drawMenu(5);
+					}
+				}
+			}
+			break;
 	}
 }
 
@@ -705,8 +824,19 @@ void drawBlock(int x,int y,int blockId,bool useUIBuffer)
 	//220,223
 	//Default values in case of empty
 	if(useUIBuffer == NULL) useUIBuffer = false;
+	int i = 0;
+	int j = 0;
 	switch(blockId)
 	{
+		case 100: //Custom
+			for(i = 0;i<CUBE_DIM[0];i++)
+			{
+				for(j = 0;j<CUBE_DIM[1];j++)
+				{
+					drawMatrix(x+i,y+j,1,1,' ',CB_C[i][j],CB_C[i][j],100,useUIBuffer);
+				}
+			}
+			break;
 		case 0: //Air
 			drawMatrix(x,y,CUBE_DIM[0],CUBE_DIM[1],' ',BLACK,BLACK,0,useUIBuffer);
 			break;
